@@ -5,3 +5,4 @@ class sensorDevice:
         self.ipAddr = ipAddr_
         self.geoLocation = geoLocation_
         self.data = []
+        self.count = 0

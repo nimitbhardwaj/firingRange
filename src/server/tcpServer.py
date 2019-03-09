@@ -12,13 +12,12 @@ class tcpServer(asyncio.Protocol):
 
     def data_received(self, data):
         message = data.decode()
-        androidId, lng, lat = message.split("|")
-        if androidId in config.sensorDeviceDict:
+        peername = self.transport.get_extra_info('peername')
+        lng, lat = message.split("|")
+        if peername in config.sensorDeviceDict:
             self.transport.write("Already connected".encode())
         else:
-            print(self.transport.get_extra_info('peername'))
-            peername = self.transport.get_extra_info('peername')
-            config.sensorDeviceDict[androidId] = sensorDevice(androidId, time.time(), peername, (lng, lat))
+            config.sensorDeviceDict[peername[0]] = sensorDevice(time.time(), peername, (lng, lat))
             self.transport.write("OK".encode())
         print('Close the client socket')
         self.transport.close()

@@ -7,7 +7,7 @@ udpPort = 65433
 
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     s.connect((host, tcpPort))
-    s.sendall(('Hello, world').encode())
+    s.sendall(('12345678|133|123').encode())
     data = s.recv(1024)
 
 print('Received', repr(data))

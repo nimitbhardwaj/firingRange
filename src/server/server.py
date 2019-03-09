@@ -1,20 +1,21 @@
 # #!/usr/bin/env python3
 
 import asyncio
+import time
 
 host = ''
 tcpPort = 65432
 udpPort = 65433
 
+sensorDeviceDict = {}
+availableSensorId = 0
+
 class sensorDevice: 
-    def __init__(self):
-        pass
-
-    def gedId(self):
-        return self.id
-
-    def setId(self, id_):
-        self.id = id_
+    def __init__(self, androidId_=None, timeStamp_=None, ipAddr_ = None, geoLocation_ = None ):
+        self.androidId = androidId_
+        self.timeStamp = timeStamp_
+        self.ipAddr = ipAddr_
+        self.geoLocation = geoLocation_
         
 class tcpServer(asyncio.Protocol):
     def connection_made(self, transport):
@@ -24,11 +25,14 @@ class tcpServer(asyncio.Protocol):
 
     def data_received(self, data):
         message = data.decode()
-        print('Data received: {!r}'.format(message))
-
-        print('Send: {!r}'.format(message))
-        self.transport.write(data)
-
+        androidId, lng, lat = message.split("|")
+        if androidId in sensorDeviceDict:
+            self.transport.write("Already connected".encode())
+        else:
+            print(self.transport.get_extra_info('peername'))
+            peername = self.transport.get_extra_info('peername')
+            sensorDeviceDict[androidId] = sensorDevice(androidId, time.time(), peername, (lng, lat))
+            self.transport.write("OK".encode())
         print('Close the client socket')
         self.transport.close()
 
@@ -48,7 +52,7 @@ async def main():
     loop = asyncio.get_running_loop()
 
     tcpServerConn = await loop.create_server(lambda: tcpServer(), host, tcpPort)
-    udpTransport, udpProtocol = await loop.create_datagram_endpoint(lambda: udpServer(),local_addr=('127.0.0.1', udpPort))
+    udpTransport, udpProtocol = await loop.create_datagram_endpoint(lambda: udpServer(), local_addr = ('192.168.225.37', udpPort))
 
     async with tcpServerConn:
         await tcpServerConn.serve_forever()

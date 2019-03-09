@@ -1,5 +1,3 @@
-# #!/usr/bin/env python3
-
 import asyncio
 import time
 from src.server.tcpServer import tcpServer

@@ -1,6 +1,6 @@
 # #!/usr/bin/env python3
 
-from src import firingRange
+from src.firingRange import firingRange
 
 if __name__ == '__main__':
-    firingRange.firingRange().run()
+    firingRange().run()

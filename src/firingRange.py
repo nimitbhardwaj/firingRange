@@ -7,5 +7,4 @@ class firingRange:
         pass
 
     def run(self):
-        print(config.hola)
         asyncio.run(server())

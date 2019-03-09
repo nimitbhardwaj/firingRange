@@ -4,3 +4,4 @@ class sensorDevice:
         self.timeStamp = timeStamp_
         self.ipAddr = ipAddr_
         self.geoLocation = geoLocation_
+        self.data = []

@@ -1,4 +1,5 @@
 import asyncio
+import src.config as config
 
 class udpServer:
     def connection_made(self, transport):
@@ -6,6 +7,5 @@ class udpServer:
 
     def datagram_received(self, data, addr):
         message = data.decode()
-        print('Received %r from %s' % (message, addr))
-        print('Send %r to %s' % (message, addr))
-        self.transport.sendto(data, addr)
+        androidId, seqNo, data = message.split("|")
+        config.sensorDeviceDict[androidId].data.append((int(seqNo), data))
